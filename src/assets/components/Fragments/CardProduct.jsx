@@ -6,7 +6,7 @@ CardProduct.Footer = Footer;
 
 export default function CardProduct({ children }) {
   return (
-    <div className="w-full max-w-sm bg-gray-800 border border-gray-700 rounded-lg shadow p-8">
+    <div className="w-full max-w-sm bg-gray-800 border border-gray-700 rounded-lg shadow p-8 flex flex-col justify-between">
       {children}
     </div>
   );
@@ -26,7 +26,7 @@ function Header({ product }) {
 
 function Body({ children, title }) {
   return (
-    <div className=" mb-5">
+    <div className="mb-5 h-full">
       <a href="">
         <h5 className="text-xl font-semibold tracking-tight text-white">
           {title}
