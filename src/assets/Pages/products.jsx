@@ -1,4 +1,6 @@
+import { Fragment } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
+import Button from "../components/Elements/Button";
 
 const products = [
   {
@@ -26,16 +28,34 @@ const products = [
   },
 ];
 
+const email = localStorage.getItem("email");
+
 export default function ProductsPage() {
+  function handleLogout() {
+    localStorage.removeItem("email");
+    localStorage.removeItem("password");
+    window.location.href = "/login";
+  }
+
   return (
-    <div className="flex flex-wrap justify-center py-5 gap-2">
-      {products.map((el) => (
-        <CardProduct key={el.id}>
-          <CardProduct.Header product={el.product} />
-          <CardProduct.Body title={el.title}>{el.description}</CardProduct.Body>
-          <CardProduct.Footer price={el.price} />
-        </CardProduct>
-      ))}
-    </div>
+    <Fragment>
+      <div className="flex justify-end bg-blue-600 text-white items-center h-20 px-5 gap-5">
+        {email}
+        <Button classname={"bg-slate-800 text-white"} onClick={handleLogout}>
+          Log Out
+        </Button>
+      </div>
+      <div className="flex flex-wrap justify-center py-5 gap-2">
+        {products.map((el) => (
+          <CardProduct key={el.id}>
+            <CardProduct.Header product={el.product} />
+            <CardProduct.Body title={el.title}>
+              {el.description}
+            </CardProduct.Body>
+            <CardProduct.Footer price={el.price} />
+          </CardProduct>
+        ))}
+      </div>
+    </Fragment>
   );
 }
