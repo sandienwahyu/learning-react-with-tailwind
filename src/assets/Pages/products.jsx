@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
+import { useEffect } from "react";
 
 const products = [
   {
@@ -31,7 +32,20 @@ const products = [
 const email = localStorage.getItem("email");
 
 export default function ProductsPage() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  const totalPrice = cart.reduce((acc, item) => {
+    const product = products.find((product) => product.id === item.id);
+
+    return acc + product.price * item.qty;
+  }, 0);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   function handleLogout() {
     localStorage.removeItem("email");
@@ -64,7 +78,7 @@ export default function ProductsPage() {
         </Button>
       </div>
       <div className="flex justify-center py-5 px-5">
-        <div className="w-3/5 flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4 flex-auto">
           {products.map((el) => (
             <CardProduct key={el.id}>
               <CardProduct.Header product={el.product} />
@@ -78,11 +92,12 @@ export default function ProductsPage() {
             </CardProduct>
           ))}
         </div>
-        <div className="w-2/5 flex flex-col flex-wrap items-center">
-          <h1 className="text-3xl font-bold text-blue-600 text-center p-3">
-            Cart
-          </h1>
-          {cart.length > 0 && (
+        {cart.length > 0 && (
+          <div className="w-2/5 flex flex-col flex-wrap items-center">
+            <h1 className="text-3xl font-bold text-blue-600 text-center p-3">
+              Cart
+            </h1>
+
             <table className="table-auto text-center">
               <thead>
                 <tr>
@@ -118,10 +133,22 @@ export default function ProductsPage() {
                     </tr>
                   );
                 })}
+                <tr>
+                  <td colSpan={3} className="p-2 border">
+                    Total Price
+                  </td>
+                  <td className="p-2 border">{totalPrice}</td>
+                </tr>
               </tbody>
             </table>
-          )}
-        </div>
+
+            <div className="flex w-full justify-end items-center py-5">
+              <Button classname={"bg-blue-600"} onClick={() => setCart([])}>
+                Clear
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </Fragment>
   );
