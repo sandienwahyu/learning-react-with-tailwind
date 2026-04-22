@@ -30,7 +30,9 @@ export default function FormRegister() {
           placeholder={"masukkan ulang password anda..."}
         ></InputForm>
       </div>
-      <Button classname={"bg-blue-600 w-full"}>Register</Button>
+      <Button classname={"bg-blue-600 w-full"} onClick={() => {}}>
+        Register
+      </Button>
     </form>
   );
 }

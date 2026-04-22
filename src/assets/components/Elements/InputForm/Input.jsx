@@ -1,4 +1,4 @@
-export default function Input({ type, placeholder, name }) {
+export default function Input({ type, placeholder, name, ref }) {
   return (
     <input
       type={type}
@@ -6,6 +6,7 @@ export default function Input({ type, placeholder, name }) {
       placeholder={placeholder}
       name={name}
       id={name}
+      ref={ref}
     />
   );
 }

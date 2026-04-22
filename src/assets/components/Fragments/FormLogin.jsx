@@ -1,7 +1,16 @@
 import InputForm from "../Elements/InputForm";
 import Button from "../Elements/Button";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 export default function FormLogin() {
+  const emailRef = useRef(null);
+
+  useEffect(() => {
+    console.log(emailRef.current);
+    emailRef.current.focus();
+  }, []);
+
   function handleLogin(e) {
     e.preventDefault();
     localStorage.setItem("email", e.target.email.value);
@@ -17,6 +26,7 @@ export default function FormLogin() {
           name={"email"}
           label={"Email"}
           placeholder={"masukkan email anda..."}
+          ref={emailRef}
         ></InputForm>
         <InputForm
           type={"password"}
