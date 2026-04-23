@@ -7,7 +7,6 @@ export default function FormLogin() {
   const emailRef = useRef(null);
 
   useEffect(() => {
-    console.log(emailRef.current);
     emailRef.current.focus();
   }, []);
 

@@ -12,13 +12,13 @@ export default function CardProduct({ children }) {
   );
 }
 
-function Header({ product }) {
+function Header({ image, title }) {
   return (
     <a href="">
       <img
-        src={`\\images\\${product}.jpg`}
-        alt={product}
-        className="pb-8 rounded-t-lg w-full"
+        src={image}
+        alt={title}
+        className="pb-8 rounded-t-lg w-full h-60 object-contain drop-shadow-sm drop-shadow-gray-300"
       />
     </a>
   );
@@ -40,9 +40,12 @@ function Body({ children, title }) {
 function Footer({ price, onAddToCart }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-3xl font-bold text-white">
-        Rp
-        {price.toLocaleString("id-ID", { styles: "currency", currency: "IDR" })}
+      <span className="text-2xl font-bold text-white">
+        {`$ `}
+        {price.toLocaleString("id-ID", {
+          styles: "currency",
+          currency: "USD",
+        })}
       </span>
       <Button classname={"bg-blue-600"} onClick={onAddToCart}>
         Add to Cart

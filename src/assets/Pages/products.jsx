@@ -2,32 +2,9 @@ import { Fragment, useState } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import { useEffect } from "react";
+import { getProducts } from "../../services/product.service";
 
-const products = [
-  {
-    id: 1,
-    title: "Sepatu Baru",
-    product: "shoes-1",
-    price: 1000000,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo optio abeius adipisci accusantium quo.",
-  },
-  {
-    id: 2,
-    title: "Sepatu Lama",
-    product: "shoes-2",
-    price: 500000,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo optio abeius adipisci accusantium quo. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet natus reiciendis delectus ipsam possimus quidem debitis quis sunt nisi voluptatum. Quasi quisquam assumenda hic ab voluptatum alias, accusantium ipsa quaerat!",
-  },
-  {
-    id: 3,
-    title: "Sepatu Second",
-    product: "shoes-2",
-    price: 750000,
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-  },
-];
+const products = await getProducts();
 
 const email = localStorage.getItem("email");
 
@@ -46,6 +23,10 @@ export default function ProductsPage() {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    console.log(getProducts());
+  }, []);
 
   function handleLogout() {
     localStorage.removeItem("email");
@@ -79,18 +60,26 @@ export default function ProductsPage() {
       </div>
       <div className="flex justify-center py-5 px-5">
         <div className="flex flex-wrap justify-center gap-4 flex-auto">
-          {products.map((el) => (
-            <CardProduct key={el.id}>
-              <CardProduct.Header product={el.product} />
-              <CardProduct.Body title={el.title}>
-                {el.description}
-              </CardProduct.Body>
-              <CardProduct.Footer
-                price={el.price}
-                onAddToCart={() => handleAddToCart(el.id)}
-              />
-            </CardProduct>
-          ))}
+          {products.map((el) => {
+            const title =
+              el.title.length > 20
+                ? `${el.title.substring(0, 20)}...`
+                : el.title;
+            const description =
+              el.description.length > 100
+                ? `${el.description.substring(0, 100)}...`
+                : el.description;
+            return (
+              <CardProduct key={el.id}>
+                <CardProduct.Header image={el.image} title={title} />
+                <CardProduct.Body title={title}>{description}</CardProduct.Body>
+                <CardProduct.Footer
+                  price={el.price}
+                  onAddToCart={() => handleAddToCart(el.id)}
+                />
+              </CardProduct>
+            );
+          })}
         </div>
         {cart.length > 0 && (
           <div className="w-2/5 flex flex-col flex-wrap items-center">
@@ -113,31 +102,42 @@ export default function ProductsPage() {
                     (product) => product.id === item.id,
                   );
 
+                  const title =
+                    product.title.length > 20
+                      ? `${product.title.substring(0, 20)}...`
+                      : product.title;
+
                   return (
                     <tr key={product.id}>
-                      <td className="p-2 border">{product.title}</td>
+                      <td className="p-2 border">{title}</td>
                       <td className="p-2 border">{item.qty}</td>
                       <td className="p-2 border">
                         {product.price.toLocaleString("id-ID", {
                           styles: "currency",
-                          currency: "IDR",
+                          currency: "USD",
                         })}
                       </td>
                       <td className="p-2 border">
-                        {"Rp" +
+                        {"$" +
                           (product.price * item.qty).toLocaleString("id-ID", {
                             styles: "currency",
-                            currency: "IDR",
+                            currency: "USD",
                           })}
                       </td>
                     </tr>
                   );
                 })}
                 <tr>
-                  <td colSpan={3} className="p-2 border">
+                  <td colSpan={3} className="p-2 border font-bold">
                     Total Price
                   </td>
-                  <td className="p-2 border">{totalPrice}</td>
+                  <td className="p-2 border font-bold">
+                    {"$" +
+                      totalPrice.toLocaleString("id-ID", {
+                        styles: "currency",
+                        currency: "USD",
+                      })}
+                  </td>
                 </tr>
               </tbody>
             </table>
