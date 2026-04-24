@@ -1,31 +1,53 @@
 import InputForm from "../Elements/InputForm";
 import Button from "../Elements/Button";
+import { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
+import { userLogin } from "../../../services/auth.service";
 
 export default function FormLogin() {
-  const emailRef = useRef(null);
+  const usernameRef = useRef(null);
+  const [isError, setIsError] = useState("");
 
   useEffect(() => {
-    emailRef.current.focus();
+    localStorage.getItem("token")
+      ? (window.location.href = "/products")
+      : usernameRef.current.focus();
   }, []);
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
-    localStorage.setItem("email", e.target.email.value);
-    localStorage.setItem("password", e.target.password.value);
-    window.location.href = "/products";
+    setIsError("");
+
+    const dataLogin = {
+      username: e.target.username.value,
+      password: e.target.password.value,
+    };
+
+    try {
+      const token = await userLogin(dataLogin);
+
+      if (token) {
+        window.location.href = "/products";
+        localStorage.setItem("token", token);
+      }
+    } catch (error) {
+      const message = error.response
+        ? error.response.data
+        : "Koneksi gagal, coba lagi";
+      setIsError(message);
+    }
   }
 
   return (
     <form onSubmit={(e) => handleLogin(e)}>
       <div className="mb-6">
         <InputForm
-          type={"email"}
-          name={"email"}
-          label={"Email"}
-          placeholder={"masukkan email anda..."}
-          ref={emailRef}
+          type={"text"}
+          name={"username"}
+          label={"Username"}
+          placeholder={"masukkan username anda..."}
+          ref={usernameRef}
         ></InputForm>
         <InputForm
           type={"password"}
@@ -37,6 +59,11 @@ export default function FormLogin() {
       <Button type="submit" classname={"bg-blue-600 w-full"}>
         Login
       </Button>
+      {isError && (
+        <div className="w-full flex justify-center">
+          <p className="text-red-600 text-md pt-2">{isError + " !!!"}</p>
+        </div>
+      )}
     </form>
   );
 }

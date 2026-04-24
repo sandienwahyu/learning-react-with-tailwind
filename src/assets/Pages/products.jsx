@@ -3,16 +3,36 @@ import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import { useEffect } from "react";
 import { getProducts } from "../../services/product.service";
+import { jwtDecode } from "jwt-decode";
 
 const products = await getProducts();
 
-const email = localStorage.getItem("email");
-
 export default function ProductsPage() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState("");
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+      setIsLoading(false);
+      setUser(decoded.user);
+    } catch (error) {
+      console.error("Token bermasalah:", error);
+      localStorage.removeItem("token"); // Bersihkan sampah
+      window.location.href = "/login";
+    }
+  }, []);
 
   const totalPrice = cart.reduce((acc, item) => {
     const product = products.find((product) => product.id === item.id);
@@ -24,13 +44,8 @@ export default function ProductsPage() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  useEffect(() => {
-    console.log(getProducts());
-  }, []);
-
   function handleLogout() {
-    localStorage.removeItem("email");
-    localStorage.removeItem("password");
+    localStorage.removeItem("token");
     window.location.href = "/login";
   }
 
@@ -50,10 +65,16 @@ export default function ProductsPage() {
         ]);
   }
 
+  if (isLoading)
+    return (
+      <div className="flex h-screen justify-center items-center">
+        Loading...
+      </div>
+    );
   return (
     <Fragment>
       <div className="flex justify-end bg-blue-600 text-white items-center h-20 px-5 gap-5">
-        {email}
+        <span className="font-bold text-xl">{user}</span>
         <Button classname={"bg-slate-800 text-white"} onClick={handleLogout}>
           Log Out
         </Button>
