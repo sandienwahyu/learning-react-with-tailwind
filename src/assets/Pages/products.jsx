@@ -3,36 +3,17 @@ import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import { useEffect } from "react";
 import { getProducts } from "../../services/product.service";
-import { jwtDecode } from "jwt-decode";
+import { useAuthLogin } from "../../hooks/useAuthLogin";
 
 const products = await getProducts();
 
 export default function ProductsPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState("");
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      window.location.href = "/login";
-      return;
-    }
-
-    try {
-      const decoded = jwtDecode(token);
-      setIsLoading(false);
-      setUser(decoded.user);
-    } catch (error) {
-      console.error("Token bermasalah:", error);
-      localStorage.removeItem("token"); // Bersihkan sampah
-      window.location.href = "/login";
-    }
-  }, []);
+  const { user, isLoading } = useAuthLogin();
 
   const totalPrice = cart.reduce((acc, item) => {
     const product = products.find((product) => product.id === item.id);
