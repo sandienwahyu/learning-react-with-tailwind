@@ -1,4 +1,5 @@
 import Button from "../Elements/Button";
+import { Link } from "react-router";
 
 CardProduct.Header = Header;
 CardProduct.Body = Body;
@@ -12,15 +13,15 @@ export default function CardProduct({ children }) {
   );
 }
 
-function Header({ image, title }) {
+function Header({ image, title, id }) {
   return (
-    <a href="">
+    <Link to={`/product/${id}`}>
       <img
         src={image}
         alt={title}
         className="pb-8 rounded-t-lg w-full h-60 object-contain drop-shadow-sm drop-shadow-gray-300"
       />
-    </a>
+    </Link>
   );
 }
 

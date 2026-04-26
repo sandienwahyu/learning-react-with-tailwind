@@ -9,3 +9,13 @@ export async function getProducts() {
         throw error;
     }
 }
+
+export async function getProductDetails(id) {
+    try {
+        const response = await axios.get(`https://fakestoreapi.com/products/${id}`)
+        return response.data;
+    } catch(error) {
+        console.log(error);
+        throw error;
+    }
+}

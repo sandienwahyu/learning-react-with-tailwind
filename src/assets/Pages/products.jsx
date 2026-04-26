@@ -73,7 +73,7 @@ export default function ProductsPage() {
                 : el.description;
             return (
               <CardProduct key={el.id}>
-                <CardProduct.Header image={el.image} title={title} />
+                <CardProduct.Header image={el.image} title={title} id={el.id} />
                 <CardProduct.Body title={title}>{description}</CardProduct.Body>
                 <CardProduct.Footer
                   price={el.price}
