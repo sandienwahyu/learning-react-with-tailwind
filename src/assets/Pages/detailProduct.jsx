@@ -21,6 +21,7 @@ export default function DetailProductPage() {
         }
         setProduct(data);
       } catch (err) {
+        console.log(err);
         setError(true);
       }
     }
