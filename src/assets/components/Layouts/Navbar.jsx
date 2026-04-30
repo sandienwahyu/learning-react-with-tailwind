@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { useAuthLogin } from "../../../hooks/useAuthLogin";
 import Button from "../Elements/Button";
+import { DarkMode } from "../../../context/DarkMode";
 
 export default function Navbar() {
+  const { isDarkMode, setIsDarkMode } = useContext(DarkMode);
   const { user } = useAuthLogin();
 
   function handleLogout() {
@@ -15,6 +18,12 @@ export default function Navbar() {
       <Button classname={"bg-slate-800 text-white"} onClick={handleLogout}>
         Log Out
       </Button>
+      <button
+        className={`rounded ${isDarkMode ? "bg-slate-600 text-white" : "bg-white text-slate-600"} p-2 cursor-pointer`}
+        onClick={() => setIsDarkMode(!isDarkMode)}
+      >
+        {isDarkMode ? "Light" : "Dark"}
+      </button>
     </div>
   );
 }

@@ -19,7 +19,9 @@ export default function TableCart({ products }) {
   if (cart.length === 0) return <></>;
   return (
     <div className="w-2/5 flex flex-col flex-wrap items-center flex-1">
-      <h1 className="text-3xl font-bold text-blue-600 text-center p-3">Cart</h1>
+      <h1 className="text-3xl font-bold text-blue-600 text-center p-3 text-shadow-slate-100 text-shadow-lg">
+        Cart
+      </h1>
 
       <table className="table-auto text-center">
         <thead>

@@ -1,4 +1,5 @@
 import { useAuthLogin } from "../../hooks/useAuthLogin";
+import Navbar from "../components/Layouts/Navbar";
 
 export default function ProfilePage() {
   const { user, isLoading } = useAuthLogin();
@@ -10,8 +11,11 @@ export default function ProfilePage() {
       </div>
     );
   return (
-    <div className="flex justify-center items-center">
-      <p className="font-bold">Username: {user}</p>
-    </div>
+    <>
+      <Navbar />
+      <div className="flex justify-center items-center">
+        <p className="font-bold">Username: {user}</p>
+      </div>
+    </>
   );
 }

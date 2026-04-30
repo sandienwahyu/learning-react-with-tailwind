@@ -1,8 +1,14 @@
 import { Link } from "react-router";
+import { DarkMode } from "../../../context/DarkMode";
+import { useContext } from "react";
 
 export default function AuthLayout({ children, title, type }) {
+  const { isDarkMode, setIsDarkMode } = useContext(DarkMode);
+
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div
+      className={`flex justify-center items-center min-h-screen ${isDarkMode ? "bg-slate-600" : ""}`}
+    >
       <div className="w-full max-w-sm bg-slate-100 p-10 rounded-2xl">
         <FormTitle title={title} />
 
@@ -10,6 +16,13 @@ export default function AuthLayout({ children, title, type }) {
 
         <Navigation type={type} />
       </div>
+
+      <button
+        className="absolute top-2 right-2 rounded bg-blue-600 text-white p-2"
+        onClick={() => setIsDarkMode(!isDarkMode)}
+      >
+        {isDarkMode ? "Light" : "Dark"}
+      </button>
     </div>
   );
 }
